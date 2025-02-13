@@ -4,22 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PERISTUDIO - Game & App Development</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'SF Pro Display', 'Segoe UI', sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --dark: #0a0a14;
+            --card-bg: rgba(255,255,255,0.03);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
         }
 
         body {
-            background: #0f0f1a;
+            background: var(--dark);
             color: #fff;
             line-height: 1.6;
         }
 
         .gradient-text {
-            background: linear-gradient(45deg, #3498db, #2ecc71);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -27,127 +54,223 @@
         }
 
         .header {
-            background: rgba(15, 15, 26, 0.95);
+            background: rgba(10, 10, 20, 0.98);
             padding: 1.5rem;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
         .nav-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 0 2rem;
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
         }
 
         .nav-links a {
             color: #fff;
             text-decoration: none;
-            margin-left: 2rem;
-            opacity: 0.8;
-            transition: opacity 0.3s;
+            font-size: 1.1rem;
+            font-weight: 500;
+            opacity: 0.9;
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        .nav-links a:hover {
-            opacity: 1;
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
         .hero {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 0 2rem;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(52, 152, 219, 0.1), rgba(46, 204, 113, 0.05));
+            z-index: -1;
+        }
+
+        .hero-content {
             text-align: center;
-            padding: 0 1rem;
-            background: linear-gradient(45deg, rgba(52, 152, 219, 0.1), rgba(46, 204, 113, 0.1));
+            animation: fadeInUp 1s ease;
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
         }
 
         .hero p {
-            font-size: 1.2rem;
-            opacity: 0.8;
-            max-width: 600px;
+            font-size: 1.4rem;
+            opacity: 0.9;
+            max-width: 700px;
             margin: 0 auto;
+            line-height: 1.6;
         }
 
         .content-section {
-            max-width: 1200px;
-            margin: 4rem auto;
-            padding: 2rem;
+            max-width: 1400px;
+            margin: 8rem auto;
+            padding: 0 2rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
         }
 
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
-            margin-top: 2rem;
+            margin-top: 3rem;
         }
 
         .card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            padding: 2rem;
-            transition: transform 0.3s;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+            animation: float 6s ease-in-out infinite;
         }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            border-color: rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
         }
 
         .button {
             display: inline-block;
-            padding: 1rem 2rem;
-            background: linear-gradient(45deg, #3498db, #2ecc71);
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             text-decoration: none;
             border-radius: 50px;
+            font-weight: 500;
             margin-top: 2rem;
-            transition: transform 0.3s;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
         }
 
         .button:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.2);
         }
 
         .store-badge {
-            height: 40px;
+            height: 50px;
             margin: 1rem;
-            opacity: 0.8;
-            transition: opacity 0.3s;
+            transition: all 0.3s ease;
         }
 
         .store-badge:hover {
-            opacity: 1;
+            transform: translateY(-3px);
+            filter: brightness(1.1);
+        }
+
+        .product-card {
+            text-align: center;
+        }
+
+        .product-card img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1.5rem;
+            border-radius: 20px;
+        }
+
+        .contact-card {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .footer {
-            background: rgba(15, 15, 26, 0.95);
-            padding: 2rem;
+            background: rgba(10, 10, 20, 0.98);
+            padding: 3rem 2rem;
             text-align: center;
-            margin-top: 4rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .footer a {
+            color: #fff;
+            text-decoration: none;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .footer a:hover {
+            opacity: 1;
         }
 
         @media (max-width: 768px) {
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 3rem;
             }
             
             .nav-links {
                 display: none;
+            }
+
+            .content-section {
+                margin: 4rem auto;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -167,57 +290,65 @@
     </header>
 
     <section class="hero">
-        <div>
+        <div class="hero-content">
             <h1><span class="gradient-text">PERISTUDIO</span></h1>
-            <p>Yenilikçi oyun ve uygulama geliştirme stüdyosu</p>
+            <p>Oyun ve uygulama geliştirme tutkusuyla, yenilikçi çözümler üreten genç ve dinamik bir teknoloji stüdyosu.</p>
             <a href="#products" class="button">Ürünlerimizi Keşfedin</a>
         </div>
     </section>
 
     <section id="about" class="content-section">
-        <h2 class="gradient-text">Biz Kimiz?</h2>
+        <div class="section-header">
+            <h2 class="gradient-text">Biz Kimiz?</h2>
+            <p>Teknoloji ve yaratıcılığı birleştirerek en iyi kullanıcı deneyimini sunuyoruz</p>
+        </div>
         <div class="card-grid">
             <div class="card">
                 <h3>Oyun Geliştirme</h3>
-                <p>Mobil platformlar için yenilikçi ve eğlenceli oyunlar geliştiriyoruz.</p>
+                <p>Mobil platformlar için yenilikçi ve eğlenceli oyunlar geliştiriyoruz. Her bir oyunumuz, benzersiz oyun mekanikleri ve sürükleyici deneyimler sunuyor.</p>
             </div>
             <div class="card">
                 <h3>Uygulama Geliştirme</h3>
-                <p>Modern teknolojiler kullanarak kullanıcı dostu uygulamalar tasarlıyoruz.</p>
+                <p>Modern teknolojiler kullanarak kullanıcı dostu uygulamalar tasarlıyoruz. Her uygulamamız, kullanıcı deneyimini en üst düzeyde tutmayı hedefliyor.</p>
             </div>
             <div class="card">
                 <h3>Teknoloji</h3>
-                <p>En son teknolojileri kullanarak yüksek performanslı çözümler üretiyoruz.</p>
+                <p>En son teknolojileri kullanarak yüksek performanslı çözümler üretiyoruz. Sürekli gelişen teknoloji dünyasını yakından takip ediyoruz.</p>
             </div>
         </div>
     </section>
 
     <section id="products" class="content-section">
-        <h2 class="gradient-text">Ürünlerimiz</h2>
+        <div class="section-header">
+            <h2 class="gradient-text">Ürünlerimiz</h2>
+            <p>Keşfedin ve deneyimleyin</p>
+        </div>
         <div class="card-grid">
-            <div class="card">
+            <div class="card product-card">
+                <img src="https://play-lh.googleusercontent.com/GYWqLkLodHJzWE72mL5AfRVSZsidS4H8cvz3ZabyFpfYiFYmtlNEO6zhBax1KnIAary3=w240-h480-rw" alt="Wordle Plus Logo">
                 <h3>Wordle Plus</h3>
-                <p>Türkçe kelime tahmin oyunu</p>
-                <div>
-                    <img src="/api/placeholder/150/44" alt="Play Store" class="store-badge">
-                    <img src="/api/placeholder/150/44" alt="App Store" class="store-badge">
-                </div>
+                <p>Türkçe kelime tahmin oyunu. Günlük bulmacalar ve farklı kategorilerle eğlenceli bir deneyim sunuyoruz.</p>
+                <a href="https://play.google.com/store/apps/details?id=com.PeriStudio.wordlePlus" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/888/888857.png" alt="Google Play Store" class="store-badge">
+                </a>
             </div>
-            <!-- Diğer ürünler buraya eklenebilir -->
         </div>
     </section>
 
     <section id="contact" class="content-section">
-        <h2 class="gradient-text">İletişim</h2>
-        <div class="card">
-            <p>İş birliği ve önerileriniz için bizimle iletişime geçin:</p>
-            <p>Email: contact@peristudio.dev</p>
+        <div class="section-header">
+            <h2 class="gradient-text">İletişim</h2>
+            <p>Sorularınız ve önerileriniz için bizimle iletişime geçin</p>
+        </div>
+        <div class="card contact-card">
+            <p>İş birliği ve önerileriniz için:</p>
+            <p>Email: <a href="mailto:talhaperi@gmail.com" style="color: var(--primary);">talhaperi@gmail.com</a></p>
         </div>
     </section>
 
     <footer class="footer">
         <p>&copy; 2025 PERISTUDIO. Tüm hakları saklıdır.</p>
-        <p><small><a href="/app-ads.txt" style="color: #fff; opacity: 0.5;">app-ads.txt</a></small></p>
+        <p><small><a href="/app-ads.txt">app-ads.txt</a></small></p>
     </footer>
 </body>
 </html>
