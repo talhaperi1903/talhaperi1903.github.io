@@ -3,132 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wordle Plus - Geliştirici Sitesi</title>
+    <title>PERISTUDIO - Game & App Development</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'SF Pro Display', 'Segoe UI', sans-serif;
         }
 
         body {
-            background: #f5f5f5;
-            color: #333;
+            background: #0f0f1a;
+            color: #fff;
             line-height: 1.6;
         }
 
-        .header {
-            background: #2c7873;
-            color: white;
-            padding: 1rem;
-            text-align: center;
+        .gradient-text {
+            background: linear-gradient(45deg, #3498db, #2ecc71);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: bold;
         }
 
-        .container {
-            max-width: 800px;
+        .header {
+            background: rgba(15, 15, 26, 0.95);
+            padding: 1.5rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 2rem;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 1rem;
+            background: linear-gradient(45deg, rgba(52, 152, 219, 0.1), rgba(46, 204, 113, 0.1));
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content-section {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 2rem;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
         }
 
         .card {
-            background: white;
-            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
             padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
         }
 
-        h2 {
-            color: #2c7873;
-            margin-bottom: 1rem;
+        .card:hover {
+            transform: translateY(-5px);
         }
 
         .button {
             display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background: #2c7873;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #3498db, #2ecc71);
             color: white;
             text-decoration: none;
-            border-radius: 4px;
-            margin: 0.5rem 0;
+            border-radius: 50px;
+            margin-top: 2rem;
+            transition: transform 0.3s;
         }
 
-        .store-links {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin: 1rem 0;
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        .store-badge {
+            height: 40px;
+            margin: 1rem;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .store-badge:hover {
+            opacity: 1;
         }
 
         .footer {
-            text-align: center;
+            background: rgba(15, 15, 26, 0.95);
             padding: 2rem;
-            color: #666;
+            text-align: center;
+            margin-top: 4rem;
         }
 
-        @media (max-width: 600px) {
-            .container {
-                padding: 1rem;
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
             }
             
-            .card {
-                padding: 1rem;
+            .nav-links {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
     <header class="header">
-        <h1>Wordle Plus</h1>
+        <nav class="nav-container">
+            <div class="logo">
+                <span class="gradient-text">PERISTUDIO</span>
+            </div>
+            <div class="nav-links">
+                <a href="#about">Hakkımızda</a>
+                <a href="#products">Ürünler</a>
+                <a href="#contact">İletişim</a>
+            </div>
+        </nav>
     </header>
 
-    <div class="container">
-        <div class="card">
-            <h2>Uygulama Bilgileri</h2>
-            <p>Wordle Plus, Türkçe kelime tahmin oyunudur. Günlük bulmacalar, çeşitli kategoriler ve çok oyunculu modlar sunar.</p>
-            
-            <div class="store-links">
-                <a href="https://play.google.com/store/apps/details?id=com.PeriStudio.wordlePlus" class="button">Google Play'de İndir</a>
+    <section class="hero">
+        <div>
+            <h1><span class="gradient-text">PERISTUDIO</span></h1>
+            <p>Yenilikçi oyun ve uygulama geliştirme stüdyosu</p>
+            <a href="#products" class="button">Ürünlerimizi Keşfedin</a>
+        </div>
+    </section>
+
+    <section id="about" class="content-section">
+        <h2 class="gradient-text">Biz Kimiz?</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h3>Oyun Geliştirme</h3>
+                <p>Mobil platformlar için yenilikçi ve eğlenceli oyunlar geliştiriyoruz.</p>
+            </div>
+            <div class="card">
+                <h3>Uygulama Geliştirme</h3>
+                <p>Modern teknolojiler kullanarak kullanıcı dostu uygulamalar tasarlıyoruz.</p>
+            </div>
+            <div class="card">
+                <h3>Teknoloji</h3>
+                <p>En son teknolojileri kullanarak yüksek performanslı çözümler üretiyoruz.</p>
             </div>
         </div>
+    </section>
 
-        <div class="card">
-            <h2>Gizlilik Politikası</h2>
-            <p>Son güncelleme: 13 Şubat 2025</p>
-            <br>
-            <p>Verilerinizin güvenliği bizim için önemlidir. Bu gizlilik politikası, uygulamayı kullanırken toplanan verileri ve bunların nasıl kullanıldığını açıklar.</p>
-            <br>
-            <h3>Toplanan Veriler:</h3>
-            <ul style="margin-left: 1.5rem;">
-                <li>Oyun istatistikleri</li>
-                <li>Kullanıcı tercihleri</li>
-            </ul>
-            <br>
-            <h3>Veri Kullanımı:</h3>
-            <ul style="margin-left: 1.5rem;">
-                <li>Oyun deneyimini iyileştirme</li>
-                <li>Teknik sorunları çözme</li>
-                <li>Kişiselleştirilmiş içerik sunma</li>
-            </ul>
+    <section id="products" class="content-section">
+        <h2 class="gradient-text">Ürünlerimiz</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h3>Wordle Plus</h3>
+                <p>Türkçe kelime tahmin oyunu</p>
+                <div>
+                    <img src="/api/placeholder/150/44" alt="Play Store" class="store-badge">
+                    <img src="/api/placeholder/150/44" alt="App Store" class="store-badge">
+                </div>
+            </div>
+            <!-- Diğer ürünler buraya eklenebilir -->
         </div>
+    </section>
 
+    <section id="contact" class="content-section">
+        <h2 class="gradient-text">İletişim</h2>
         <div class="card">
-            <h2>İletişim</h2>
-            <p>Teknik destek ve önerileriniz için:</p>
-            <p>E-posta: talhaperi@gmail.com</p>
+            <p>İş birliği ve önerileriniz için bizimle iletişime geçin:</p>
+            <p>Email: contact@peristudio.dev</p>
         </div>
-
-        <div class="card">
-            <h2>Yasal</h2>
-            <p>© 2025 Wordle Plus. Tüm hakları saklıdır.</p>
-            <br>
-            <p>App-ads.txt dosyasına <a href="/app-ads.txt">buradan</a> ulaşabilirsiniz.</p>
-        </div>
-    </div>
+    </section>
 
     <footer class="footer">
-        <p>Wordle Plus - Geliştirici Sayfası</p>
+        <p>&copy; 2025 PERISTUDIO. Tüm hakları saklıdır.</p>
+        <p><small><a href="/app-ads.txt" style="color: #fff; opacity: 0.5;">app-ads.txt</a></small></p>
     </footer>
 </body>
 </html>
