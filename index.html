@@ -6,26 +6,33 @@
     <title>PERISTUDIO - Game & App Development</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/ScrollTrigger.min.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
         :root {
-            --primary: #3498db;
-            --secondary: #2ecc71;
-            --dark: #0a0a14;
-            --card-bg: rgba(255,255,255,0.03);
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3ccf91;
+            --secondary-light: #4dd4ac;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --card-bg: rgba(30, 41, 59, 0.5);
+            --accent: #f72585;
         }
 
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -34,34 +41,60 @@
         }
 
         @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         body {
             background: var(--dark);
             color: #fff;
-            line-height: 1.6;
+            line-height: 1.7;
+            overflow-x: hidden;
+            font-weight: 300;
         }
 
         .gradient-text {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             font-weight: bold;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .header {
-            background: rgba(10, 10, 20, 0.98);
-            padding: 1.5rem;
+            background: rgba(15, 23, 42, 0.95);
+            padding: 1.2rem;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled {
+            padding: 0.8rem 1.2rem;
+            background: rgba(15, 23, 42, 0.98);
+            box-shadow: 0 5px 25px rgba(0,0,0,0.2);
         }
 
         .nav-container {
@@ -74,23 +107,38 @@
         }
 
         .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
+            font-size: 1.9rem;
+            font-weight: 800;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.5px;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            bottom: 5px;
+            right: -12px;
         }
 
         .nav-links {
             display: flex;
-            gap: 3rem;
+            gap: 3.5rem;
         }
 
         .nav-links a {
             color: #fff;
             text-decoration: none;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 500;
-            opacity: 0.9;
+            opacity: 0.85;
             transition: all 0.3s ease;
             position: relative;
+            padding: 0.5rem 0;
         }
 
         .nav-links a::after {
@@ -98,14 +146,28 @@
             position: absolute;
             width: 0;
             height: 2px;
-            bottom: -4px;
+            bottom: 0;
             left: 0;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary));
             transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
         }
 
         .nav-links a:hover::after {
             width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
         }
 
         .hero {
@@ -116,6 +178,7 @@
             position: relative;
             overflow: hidden;
             padding: 0 2rem;
+            padding-top: 80px;
         }
 
         .hero::before {
@@ -123,160 +186,600 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 50% 50%, rgba(52, 152, 219, 0.1), rgba(46, 204, 113, 0.05));
+            background: 
+                radial-gradient(circle at 15% 50%, rgba(67, 97, 238, 0.15), transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(60, 207, 145, 0.1), transparent 40%);
             z-index: -1;
+        }
+
+        .hero-bg-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.05;
+            border-radius: 50%;
+        }
+
+        .shape-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--primary);
+            top: -250px;
+            right: -200px;
+            filter: blur(90px);
+        }
+
+        .shape-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--secondary);
+            bottom: -150px;
+            left: -100px;
+            filter: blur(70px);
+        }
+
+        .shape-3 {
+            width: 200px;
+            height: 200px;
+            background: var(--accent);
+            top: 40%;
+            left: 15%;
+            filter: blur(60px);
+            opacity: 0.03;
         }
 
         .hero-content {
             text-align: center;
-            animation: fadeInUp 1s ease;
+            animation: fadeInUp 1.2s ease;
+            max-width: 900px;
+            position: relative;
+            z-index: 2;
         }
 
         .hero h1 {
-            font-size: 4.5rem;
+            font-size: 5.5rem;
             margin-bottom: 1.5rem;
-            line-height: 1.2;
+            line-height: 1.1;
+            font-weight: 800;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -2px;
+            position: relative;
+            display: inline-block;
         }
 
-        .hero p {
-            font-size: 1.4rem;
+        .hero-subtitle {
+            font-size: 1.5rem;
             opacity: 0.9;
             max-width: 700px;
-            margin: 0 auto;
+            margin: 0 auto 2.5rem auto;
             line-height: 1.6;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .button {
+            display: inline-block;
+            padding: 1.1rem 2.8rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(67, 97, 238, 0.3);
+            position: relative;
+            overflow: hidden;
+            font-size: 1.05rem;
+            z-index: 1;
+        }
+
+        .button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(67, 97, 238, 0.4);
+        }
+
+        .button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .button:hover::after {
+            opacity: 1;
         }
 
         .content-section {
             max-width: 1400px;
-            margin: 8rem auto;
+            margin: 10rem auto;
             padding: 0 2rem;
-            animation: fadeInUp 1s ease;
+            position: relative;
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: 4rem;
+            margin-bottom: 5rem;
+            position: relative;
         }
 
         .section-header h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: 3.2rem;
+            margin-bottom: 1.2rem;
+            font-weight: 800;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -1px;
+        }
+
+        .section-description {
+            font-size: 1.25rem;
+            max-width: 600px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.85);
         }
 
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
             margin-top: 3rem;
         }
 
         .card {
             background: var(--card-bg);
-            border-radius: 16px;
-            padding: 2.5rem;
+            border-radius: 24px;
+            padding: 3rem;
             border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.3s ease;
-            animation: float 6s ease-in-out infinite;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
 
         .card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-15px);
             border-color: rgba(255,255,255,0.1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.05), rgba(60, 207, 145, 0.05));
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            color: var(--primary-light);
+            position: relative;
+        }
+
+        .card-icon::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 50%;
+            top: -10px;
+            left: -10px;
+            z-index: -1;
         }
 
         .card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
-
-        .button {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            font-size: 1.8rem;
+            margin-bottom: 1.2rem;
             color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 500;
-            margin-top: 2rem;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
+            font-weight: 700;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        .button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.2);
+        .card p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        .feature-number {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 4rem;
+            font-weight: 800;
+            color: rgba(255,255,255,0.03);
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .store-badge {
-            height: 50px;
-            margin: 1rem;
+            height: 60px;
+            margin: 1.5rem 0.5rem 0;
             transition: all 0.3s ease;
+            opacity: 0.9;
         }
 
         .store-badge:hover {
-            transform: translateY(-3px);
-            filter: brightness(1.1);
+            transform: translateY(-5px);
+            opacity: 1;
         }
 
         .product-card {
             text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .product-image-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2.5rem;
         }
 
         .product-card img {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 1.5rem;
-            border-radius: 20px;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 28px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+
+        .product-glow {
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(67, 97, 238, 0.2), transparent 70%);
+            top: -25%;
+            left: -25%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: -1;
+        }
+
+        .product-card:hover .product-glow {
+            opacity: 1;
         }
 
         .contact-card {
             text-align: center;
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
+            padding: 4rem;
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.05), rgba(60, 207, 145, 0.05));
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        }
+
+        .contact-card h3 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .contact-card p {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-card a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-block;
+            position: relative;
+        }
+
+        .contact-card a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: var(--primary-light);
+            bottom: -2px;
+            left: 0;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .contact-card a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
         }
 
         .footer {
-            background: rgba(10, 10, 20, 0.98);
-            padding: 3rem 2rem;
+            background: rgba(15, 23, 42, 0.98);
+            padding: 4rem 2rem;
             text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.05);
+            border-top: 1px solid rgba(255,255,255,0.03);
         }
 
-        .footer a {
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .footer-logo {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-links a {
             color: #fff;
             text-decoration: none;
             opacity: 0.7;
             transition: opacity 0.3s;
+            font-size: 1.1rem;
         }
 
-        .footer a:hover {
+        .footer-links a:hover {
             opacity: 1;
+        }
+
+        .footer-copyright {
+            opacity: 0.5;
+            font-size: 0.9rem;
+        }
+
+        .legal-links {
+            margin-top: 1rem;
+        }
+
+        .legal-links a {
+            color: #fff;
+            text-decoration: none;
+            opacity: 0.5;
+            font-size: 0.8rem;
+            margin: 0 0.5rem;
+            transition: opacity 0.3s;
+        }
+
+        .legal-links a:hover {
+            opacity: 0.8;
+        }
+
+        /* For glass morphism cards */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.3);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.1);
+        }
+
+        /* Animated circle */
+        .circle-animation {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: transparent;
+            border: 2px solid rgba(67, 97, 238, 0.1);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: rotate 30s linear infinite;
+        }
+
+        .circle-animation::before {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: var(--primary);
+            border-radius: 50%;
+            top: -7.5px;
+            left: calc(50% - 7.5px);
+        }
+
+        /* Scroll down indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+        }
+
+        .scroll-indicator:hover {
+            opacity: 1;
+        }
+
+        .scroll-indicator p {
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .scroll-arrows {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .scroll-arrow {
+            width: 20px;
+            height: 20px;
+            border-right: 2px solid white;
+            border-bottom: 2px solid white;
+            transform: rotate(45deg);
+            margin: -10px;
+            animation: fadeInUp 1s ease infinite alternate;
+        }
+
+        .scroll-arrow:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 4rem;
+            }
+
+            .section-header h2 {
+                font-size: 2.8rem;
+            }
+
+            .card {
+                padding: 2.5rem;
+            }
         }
 
         @media (max-width: 768px) {
             .hero h1 {
-                font-size: 3rem;
+                font-size: 3.5rem;
+                letter-spacing: -1px;
             }
             
+            .hero-subtitle {
+                font-size: 1.3rem;
+            }
+
             .nav-links {
                 display: none;
             }
 
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .mobile-menu {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                height: 0;
+                background: var(--dark);
+                overflow: hidden;
+                transition: height 0.3s ease;
+                z-index: 999;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .mobile-menu.active {
+                height: calc(100vh - 80px);
+                border-top: 1px solid rgba(255,255,255,0.05);
+            }
+
+            .mobile-menu a {
+                color: white;
+                text-decoration: none;
+                font-size: 1.5rem;
+                margin: 1.5rem 0;
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.3s ease;
+            }
+
+            .mobile-menu.active a {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
             .content-section {
-                margin: 4rem auto;
+                margin: 5rem auto;
+            }
+
+            .section-header {
+                margin-bottom: 3rem;
             }
 
             .card-grid {
                 grid-template-columns: 1fr;
             }
+
+            .contact-card {
+                padding: 3rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .button {
+                padding: 1rem 2.2rem;
+                font-size: 1rem;
+            }
+
+            .section-header h2 {
+                font-size: 2.2rem;
+            }
+
+            .section-description {
+                font-size: 1.1rem;
+            }
+
+            .card {
+                padding: 2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <header class="header">
+    <header class="header" id="header">
         <nav class="nav-container">
             <div class="logo">
                 <span class="gradient-text">PERISTUDIO</span>
@@ -286,32 +789,80 @@
                 <a href="#products">Ürünler</a>
                 <a href="#contact">İletişim</a>
             </div>
+            <button class="mobile-menu-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
         </nav>
     </header>
 
+    <div class="mobile-menu">
+        <a href="#about">Hakkımızda</a>
+        <a href="#products">Ürünler</a>
+        <a href="#contact">İletişim</a>
+    </div>
+
     <section class="hero">
+        <div class="hero-bg-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="circle-animation"></div>
+        </div>
         <div class="hero-content">
             <h1><span class="gradient-text">PERISTUDIO</span></h1>
-            <p>Oyun ve uygulama geliştirme tutkusuyla, yenilikçi çözümler üreten genç ve dinamik bir teknoloji stüdyosu.</p>
+            <p class="hero-subtitle">Oyun ve uygulama geliştirme tutkusuyla, yenilikçi çözümler üreten genç ve dinamik bir teknoloji stüdyosu.</p>
             <a href="#products" class="button">Ürünlerimizi Keşfedin</a>
+        </div>
+        <div class="scroll-indicator" id="scrollDown">
+            <p>KEŞFET</p>
+            <div class="scroll-arrows">
+                <div class="scroll-arrow"></div>
+                <div class="scroll-arrow"></div>
+            </div>
         </div>
     </section>
 
     <section id="about" class="content-section">
         <div class="section-header">
             <h2 class="gradient-text">Biz Kimiz?</h2>
-            <p>Teknoloji ve yaratıcılığı birleştirerek en iyi kullanıcı deneyimini sunuyoruz</p>
+            <p class="section-description">Teknoloji ve yaratıcılığı birleştirerek en iyi kullanıcı deneyimini sunuyoruz</p>
         </div>
         <div class="card-grid">
             <div class="card">
+                <div class="feature-number">01</div>
+                <div class="card-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                </div>
                 <h3>Oyun Geliştirme</h3>
                 <p>Mobil platformlar için yenilikçi ve eğlenceli oyunlar geliştiriyoruz. Her bir oyunumuz, benzersiz oyun mekanikleri ve sürükleyici deneyimler sunuyor.</p>
             </div>
             <div class="card">
+                <div class="feature-number">02</div>
+                <div class="card-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                </div>
                 <h3>Uygulama Geliştirme</h3>
                 <p>Modern teknolojiler kullanarak kullanıcı dostu uygulamalar tasarlıyoruz. Her uygulamamız, kullanıcı deneyimini en üst düzeyde tutmayı hedefliyor.</p>
             </div>
             <div class="card">
+                <div class="feature-number">03</div>
+                <div class="card-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 20V10"></path>
+                        <path d="M12 20V4"></path>
+                        <path d="M6 20v-6"></path>
+                    </svg>
+                </div>
                 <h3>Teknoloji</h3>
                 <p>En son teknolojileri kullanarak yüksek performanslı çözümler üretiyoruz. Sürekli gelişen teknoloji dünyasını yakından takip ediyoruz.</p>
             </div>
@@ -321,34 +872,461 @@
     <section id="products" class="content-section">
         <div class="section-header">
             <h2 class="gradient-text">Ürünlerimiz</h2>
-            <p>Keşfedin ve deneyimleyin</p>
+            <p class="section-description">Keşfedin ve deneyimleyin</p>
         </div>
-        <div class="card-grid">
-            <div class="card product-card">
-                <img src="https://play-lh.googleusercontent.com/GYWqLkLodHJzWE72mL5AfRVSZsidS4H8cvz3ZabyFpfYiFYmtlNEO6zhBax1KnIAary3=w240-h480-rw" alt="Wordle Plus Logo">
-                <h3>Wordle Plus</h3>
-                <p>Türkçe kelime tahmin oyunu. Günlük bulmacalar ve farklı kategorilerle eğlenceli bir deneyim sunuyoruz.</p>
-                <a href="https://play.google.com/store/apps/details?id=com.PeriStudio.wordlePlus" target="_blank">
-                    <img src="https://cdn-icons-png.flaticon.com/512/888/888857.png" alt="Google Play Store" class="store-badge">
-                </a>
+        
+        <div class="product-showcase">
+            <div class="product-card-enhanced glass-card">
+                <div class="product-card-content">
+                    <div class="product-image-wrapper">
+                        <div class="app-icon-container">
+                            <img src="https://play-lh.googleusercontent.com/GYWqLkLodHJzWE72mL5AfRVSZsidS4H8cvz3ZabyFpfYiFYmtlNEO6zhBax1KnIAary3=w240-h480-rw" alt="Wordle Plus Logo" class="app-icon">
+                            <div class="icon-glow"></div>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Wordlie Türkçe</h3>
+                        <p class="product-description">Türkçe kelime tahmin oyunu. Günlük bulmacalar ve farklı kategorilerle eğlenceli bir deneyim sunuyoruz.</p>
+                        <div class="product-features">
+                            <div class="feature-tag">Türkçe Kelimeler</div>
+                            <div class="feature-tag">Günlük Bulmacalar</div>
+                            <div class="feature-tag">Farklı Kategoriler</div>
+                        </div>
+                        <div class="store-buttons">
+                            <a href="https://play.google.com/store/apps/details?id=com.PeriStudio.wordlePlus" target="_blank" class="store-button google-play">
+                                <div class="store-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="5 3 19 12 5 21"></polygon>
+                                    </svg>
+                                </div>
+                                <div class="store-text">
+                                    <span class="store-label">GET IT ON</span>
+                                    <span class="store-name">Google Play</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-showcase">
+                    <div class="video-container">
+                        <video id="wordlieVideo" controls autoplay muted loop playsinline>
+                            <source src="https://raw.githubusercontent.com/talhaperi1903/talhaperi1903.github.io/main/WordlieGamePlay.mp4" type="video/mp4">
+                            Tarayıcınız video etiketini desteklemiyor.
+                        </video>
+                                           </div>
+                </div>
             </div>
         </div>
+
+        <style>
+            .product-showcase {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 2rem 0;
+            }
+            
+            .product-card-enhanced {
+                display: flex;
+                flex-direction: column;
+                border-radius: 24px;
+                overflow: hidden;
+                background: rgba(30, 41, 59, 0.4);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+                transition: all 0.5s ease;
+            }
+            
+            .product-card-enhanced:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 30px 70px rgba(0, 0, 0, 0.25);
+                border-color: rgba(255, 255, 255, 0.15);
+            }
+            
+            .product-card-content {
+                display: flex;
+                padding: 3rem;
+                gap: 3rem;
+                align-items: center;
+            }
+            
+            .product-image-wrapper {
+                flex-shrink: 0;
+            }
+            
+            .app-icon-container {
+                position: relative;
+                width: 120px;
+                height: 120px;
+            }
+            
+            .app-icon {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 24px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease;
+                position: relative;
+                z-index: 2;
+            }
+            
+            .icon-glow {
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(67, 97, 238, 0.3), transparent 70%);
+                opacity: 0;
+                transition: opacity 0.5s ease;
+                z-index: 1;
+            }
+            
+            .app-icon-container:hover .app-icon {
+                transform: scale(1.05);
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            }
+            
+            .app-icon-container:hover .icon-glow {
+                opacity: 1;
+            }
+            
+            .product-info {
+                flex-grow: 1;
+            }
+            
+            .product-title {
+                font-size: 2.4rem;
+                font-weight: 700;
+                margin-bottom: 1rem;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                background: linear-gradient(135deg, white, rgba(255, 255, 255, 0.8));
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+            }
+            
+            .product-description {
+                font-size: 1.1rem;
+                line-height: 1.6;
+                color: rgba(255, 255, 255, 0.85);
+                margin-bottom: 1.5rem;
+                max-width: 600px;
+            }
+            
+            .product-features {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.8rem;
+                margin-bottom: 2rem;
+            }
+            
+            .feature-tag {
+                padding: 0.4rem 1rem;
+                background: rgba(67, 97, 238, 0.15);
+                border: 1px solid rgba(67, 97, 238, 0.3);
+                border-radius: 50px;
+                font-size: 0.9rem;
+                color: rgba(255, 255, 255, 0.9);
+                transition: all 0.3s ease;
+            }
+            
+            .feature-tag:hover {
+                background: rgba(67, 97, 238, 0.25);
+                transform: translateY(-2px);
+            }
+            
+            .store-buttons {
+                display: flex;
+                gap: 1rem;
+            }
+            
+            .store-button {
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+                padding: 0.7rem 1.2rem;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 12px;
+                text-decoration: none;
+                transition: all 0.3s ease;
+            }
+            
+            .store-button:hover {
+                background: rgba(255, 255, 255, 0.15);
+                transform: translateY(-3px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            }
+            
+            .google-play {
+                background: linear-gradient(135deg, rgba(66, 133, 244, 0.2), rgba(219, 68, 55, 0.2));
+                border-color: rgba(66, 133, 244, 0.3);
+            }
+            
+            .google-play:hover {
+                background: linear-gradient(135deg, rgba(66, 133, 244, 0.3), rgba(219, 68, 55, 0.3));
+            }
+            
+            .store-icon {
+                color: white;
+            }
+            
+            .store-text {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .store-label {
+                font-size: 0.7rem;
+                opacity: 0.8;
+                color: white;
+            }
+            
+            .store-name {
+                font-size: 1rem;
+                font-weight: 600;
+                color: white;
+            }
+            
+            /* Video Container Styles */
+            .video-showcase {
+                width: 135%;
+            }
+            
+            .video-container {
+                position: relative;
+                width: 75%;
+                            }
+            
+            .video-container:hover {
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+                transform: translateY(-5px);
+            }
+            
+            .video-container video {
+                position: relative;
+                top: 0;
+                left: 350px;
+                width: 40%;
+                height: 60%;
+                object-fit: cover;
+                border-radius: 16px;
+            }
+            
+                        
+            .video-container:hover .video-overlay {
+                opacity: 0.7;
+            }
+            
+            .video-container.playing .video-overlay {
+                opacity: 0;
+            }
+            
+            .play-button {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                background: rgba(67, 97, 238, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+                transform: scale(1);
+                transition: all 0.3s ease;
+            }
+            
+            .video-container:hover .play-button {
+                transform: scale(1.1);
+                background: rgba(67, 97, 238, 1);
+            }
+            
+            @media (max-width: 992px) {
+                .product-card-content {
+                    flex-direction: column;
+                    text-align: center;
+                    gap: 2rem;
+                    padding: 2.5rem 2rem;
+                }
+                
+                .app-icon-container {
+                    margin: 0 auto;
+                }
+                
+                .product-features {
+                    justify-content: center;
+                }
+                
+                .store-buttons {
+                    justify-content: center;
+                }
+                
+                .video-showcase {
+                    padding: 0 1.5rem 2rem 1.5rem;
+                }
+                
+                .play-button {
+                    width: 60px;
+                    height: 60px;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .video-showcase {
+                    padding: 0 1rem 1.5rem 1rem;
+                }
+                
+                .play-button {
+                    width: 50px;
+                    height: 50px;
+                }
+            }
+        </style>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const videoContainer = document.querySelector('.video-container');
+                const video = document.getElementById('wordlieVideo');
+                
+                videoContainer.addEventListener('click', function() {
+                    if (video.paused) {
+                        video.play();
+                        videoContainer.classList.add('playing');
+                    } else {
+                        video.pause();
+                        videoContainer.classList.remove('playing');
+                    }
+                });
+                
+                video.addEventListener('ended', function() {
+                    videoContainer.classList.remove('playing');
+                });
+            });
+        </script>
     </section>
 
     <section id="contact" class="content-section">
         <div class="section-header">
             <h2 class="gradient-text">İletişim</h2>
-            <p>Sorularınız ve önerileriniz için bizimle iletişime geçin</p>
+            <p class="section-description">Sorularınız ve önerileriniz için bizimle iletişime geçin</p>
         </div>
-        <div class="card contact-card">
-            <p>İş birliği ve önerileriniz için:</p>
-            <p>Email: <a href="mailto:talhaperi@gmail.com" style="color: var(--primary);">talhaperi@gmail.com</a></p>
+        <div class="contact-card glass-card">
+            <div class="card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+            </div>
+            <h3>Bize Ulaşın</h3>
+            <p>İş birliği teklifleri ve önerileriniz için:</p>
+            <p><a href="mailto:talhaperi@gmail.com">talhaperi@gmail.com</a></p>
         </div>
     </section>
 
     <footer class="footer">
-        <p>&copy; 2025 PERISTUDIO. Tüm hakları saklıdır.</p>
-        <p><small><a href="/app-ads.txt">app-ads.txt</a></small></p>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span class="gradient-text">PERISTUDIO</span>
+            </div>
+            <div class="footer-links">
+                <a href="#about">Hakkımızda</a>
+                <a href="#products">Ürünler</a>
+                <a href="#contact">İletişim</a>
+            </div>
+            <p class="footer-copyright">&copy; 2025 PERISTUDIO. Tüm hakları saklıdır.</p>
+            <div class="legal-links">
+                <a href="/app-ads.txt">app-ads.txt</a>
+            </div>
+        </div>
     </footer>
-</body>
-</html>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        const menuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-menu a');
+
+        menuBtn.addEventListener('click', function() {
+            mobileMenu.classList.toggle('active');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenu.classList.remove('active');
+            });
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Scroll down button
+        const scrollDownBtn = document.getElementById('scrollDown');
+        if (scrollDownBtn) {
+            scrollDownBtn.addEventListener('click', function() {
+                const aboutSection = document.getElementById('about');
+                window.scrollTo({
+                    top: aboutSection.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        // Initialize GSAP ScrollTrigger for animations
+        if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Animate cards when they come into view
+            gsap.utils.toArray('.card').forEach(card => {
+                gsap.from(card, {
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.8,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 80%",
+                        end: "bottom 20%",
+                        toggleActions: "play none none none"
+                    }
+                });
+            });
+            
+            // Animate section headers
+            gsap.utils.toArray('.section-header').forEach(header => {
+                gsap.from(header, {
+                    y: 30,
+                    opacity: 0,
+                    duration: 0.6,
+                    scrollTrigger: {
+                        trigger: header,
+                        start: "top 80%",
+                        end: "bottom 20%",
+                        toggleActions: "play none none none"
+                    }
+                });
+            });
+        }
+    </script>
